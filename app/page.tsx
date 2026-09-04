@@ -9,6 +9,8 @@ import { IdeaCta } from '@/components/idea-cta'
 import { Location } from '@/components/location'
 import { FinalCta } from '@/components/final-cta'
 import { SiteFooter } from '@/components/site-footer'
+import { WhatsAppButton } from '@/components/whatsapp-button'
+import './globals.css'
 
 export default function Page() {
   return (
@@ -24,8 +26,12 @@ export default function Page() {
         <IdeaCta />
         <Location />
         <FinalCta />
+        <WhatsAppButton />
       </main>
       <SiteFooter />
     </>
   )
 }
+
+
+

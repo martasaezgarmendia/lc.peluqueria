@@ -2,145 +2,164 @@
 
 import { useEffect, useState } from 'react'
 
+const PALABRAS_CLAVE = [
+  'COLORIMETRÍA',
+  'CORTE & ESTILO',
+  'TRATAMIENTOS',
+  'TEXTURA & BRILLO',
+  'LC PELUQUERÍA',
+]
+
 export function Preloader() {
-  const [counter, setCounter] = useState(0)
-  const [slideUp, setSlideUp] = useState(false)
-  const [visible, setVisible] = useState(true)
+  const [progress, setProgress] = useState(0)
+  const [wordIndex, setWordIndex] = useState(0)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isDone, setIsDone] = useState(false)
 
   useEffect(() => {
-    const duration = 1600
-    const steps = 50
-    const stepTime = duration / steps
+    // Rotación de conceptos
+    const wordInterval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % PALABRAS_CLAVE.length)
+    }, 450)
 
-    const timer = setInterval(() => {
-      setCounter((prev) => {
+    // Porcentaje de carga
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(timer)
+          clearInterval(progressInterval)
+          clearInterval(wordInterval)
+          setTimeout(() => setIsLoaded(true), 300)
+          setTimeout(() => setIsDone(true), 1200)
           return 100
         }
-        return prev + 2
+        const diff = Math.floor(Math.random() * 12) + 4
+        return Math.min(prev + diff, 100)
       })
-    }, stepTime)
-
-    const slideTimer = setTimeout(() => {
-      setSlideUp(true)
-    }, 1800)
-
-    const hideTimer = setTimeout(() => {
-      setVisible(false)
-    }, 2700)
+    }, 80)
 
     return () => {
-      clearInterval(timer)
-      clearTimeout(slideTimer)
-      clearTimeout(hideTimer)
+      clearInterval(progressInterval)
+      clearInterval(wordInterval)
     }
   }, [])
 
-  if (!visible) return null
+  if (isDone) return null
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: '#0a0a0a',
-        color: '#ffffff',
-        zIndex: 99999,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: '3rem 2rem',
-        transform: slideUp ? 'translateY(-100%)' : 'translateY(0%)',
-        transition: 'transform 0.9s cubic-bezier(0.87, 0, 0.13, 1)',
-        boxShadow: slideUp ? '0 25px 50px -12px rgba(0, 0, 0, 0.9)' : 'none',
-      }}
+      className={`fixed inset-0 z-[100] flex flex-col justify-between bg-[#FAF8F5] p-6 sm:p-12 text-[#1A1A1A] transition-all duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] ${
+        isLoaded ? '-translate-y-full opacity-90' : 'translate-y-0 opacity-100'
+      }`}
     >
-      {/* Detalle Superior Editorial */}
-      <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between font-mono text-[11px] uppercase tracking-[0.35em] text-neutral-400">
-        <span>ESTUDIO DE TATUAJES</span>
-        <span className="hidden sm:inline">DONOSTIA — EGIA</span>
-        <span>EDICIÓN 2026</span>
+      {/* LÍNEAS DE GUÍA FINAS TIPO RETÍCULA EDITORIAL */}
+      <div className="absolute inset-0 pointer-events-none flex justify-between px-12 opacity-30">
+        <div className="h-full w-[1px] bg-[#E8DFD8]" />
+        <div className="h-full w-[1px] bg-[#E8DFD8]" />
+        <div className="h-full w-[1px] bg-[#E8DFD8]" />
       </div>
 
-      {/* Centro: Máquina Animada + Título */}
-      <div className="relative flex flex-col items-center text-center">
+      {/* CABECERA SUPERIOR */}
+      <div className="relative z-10 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.35em] text-[#C29B88]">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-[#C29B88] animate-ping" />
+          <span>ESTUDIO DE ESTILO</span>
+        </div>
+        <span>SAN SEBASTIÁN</span>
+      </div>
+
+      {/* CENTRO: ILUSTRACIÓN DE TIJERAS ANIMADAS + LOGO EN BEIGE */}
+      <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center">
         
-        {/* Máquina de Tatuar Dinámica con animaciones nativas directas */}
-        <div className="mb-6 flex h-24 items-center justify-center">
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 64 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-white animate-bounce"
-            style={{ animationDuration: '0.6s' }}
-          >
-            {/* Conector superior de corriente */}
-            <rect x="29" y="4" width="6" height="6" rx="1" fill="currentColor" />
-            
-            {/* Cuerpo principal de la máquina / Motor */}
-            <rect x="25" y="10" width="14" height="22" rx="2" stroke="currentColor" strokeWidth="2" />
-            <line x1="28" y1="16" x2="36" y2="16" stroke="currentColor" strokeWidth="1.5" />
-            <line x1="28" y1="20" x2="36" y2="20" stroke="currentColor" strokeWidth="1.5" />
-
-            {/* Grip / Empuñadura texturizada */}
-            <rect x="27" y="32" width="10" height="14" rx="1" fill="currentColor" />
-            <line x1="25" y1="36" x2="39" y2="36" stroke="#0a0a0a" strokeWidth="1.5" />
-            <line x1="25" y1="40" x2="39" y2="40" stroke="#0a0a0a" strokeWidth="1.5" />
-
-            {/* Cartucho */}
-            <path d="M29 46L32 52L35 46H29Z" fill="currentColor" />
-
-            {/* Aguja Fina en Pulso Rápido */}
-            <line 
-              x1="32" 
-              y1="52" 
-              x2="32" 
-              y2="60" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round"
-              className="animate-ping"
-              style={{ animationDuration: '0.3s' }}
+        {/* LOGO DE LA CLIENTA CON ANILLO CÁLIDO */}
+        <div className="relative mb-6 flex h-32 w-32 items-center justify-center">
+          
+          {/* Anillo de progreso SVG en tono terracota/cobre */}
+          <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 100 100">
+            <circle
+              cx="50"
+              cy="50"
+              r="46"
+              className="stroke-[#E8DFD8] fill-none"
+              strokeWidth="2"
             />
-
-            {/* Punto de Tinta Parpadeante */}
-            <circle 
-              cx="32" 
-              cy="61" 
-              r="2" 
-              fill="white"
-              className="animate-pulse"
+            <circle
+              cx="50"
+              cy="50"
+              r="46"
+              className="stroke-[#C29B88] fill-none transition-all duration-200 ease-out"
+              strokeWidth="2.5"
+              strokeDasharray="289"
+              strokeDashoffset={289 - (289 * progress) / 100}
             />
           </svg>
+
+          {/* Imagen Logo WebP de la Clienta */}
+          <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-white shadow-xl bg-white p-0.5">
+            <img
+              src="/logo.webp"
+              alt="LC Peluquería Logo"
+              className="h-full w-full object-cover rounded-full"
+            />
+          </div>
+
+          {/* DIBUJO ANIMADO DE TIJERAS DE PELUQUERÍA (FLOTANTE EN LA ESQUINA DEL LOGO) */}
+          <div className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#FAF8F5] border border-[#E8DFD8] shadow-md">
+            <svg
+              className="h-5 w-5 text-[#C29B88] animate-bounce"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {/* Hoja 1 de la tijera */}
+              <circle cx="6" cy="6" r="3" />
+              <path d="M8.12 8.12 12 12" />
+              <path d="M20 4 8.12 15.88" />
+              {/* Hoja 2 de la tijera */}
+              <circle cx="6" cy="18" r="3" />
+              <path d="M14.8 9.2 20 20" />
+            </svg>
+          </div>
         </div>
 
-        {/* Título Principal */}
-        <div className="overflow-hidden py-2">
-          <h1 className="text-5xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl">
-            TATTOO FÉLIX
-          </h1>
+        {/* CONCEPTOS DE PELUQUERÍA ROTATIVOS */}
+        <div className="h-6 overflow-hidden mt-2">
+          <p className="font-mono text-xs uppercase tracking-[0.4em] text-[#C29B88] transition-all duration-300">
+            {PALABRAS_CLAVE[wordIndex]}
+          </p>
         </div>
 
-        {/* Subtítulo */}
-        <p className="mt-2 font-mono text-xs uppercase tracking-[0.5em] text-neutral-400 sm:text-sm">
-          Custom & Direct Author Work
-        </p>
+        <h1 className="mt-1 font-serif text-3xl sm:text-4xl font-normal tracking-wide text-[#1A1A1A]">
+          LC Peluquería
+        </h1>
       </div>
 
-      {/* Pie: Contador + Barra */}
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-4">
-        <div className="flex items-end justify-between font-mono text-xs tracking-widest text-neutral-400">
-          <span className="uppercase text-neutral-400">CARGANDO TRAZOS</span>
-          <span className="text-xl font-bold text-white">{counter}%</span>
+      {/* PIE DE CARGA LUMINOSO Y EDITORIAL */}
+      <div className="relative z-10 border-t border-[#E8DFD8] pt-6">
+        <div className="flex items-end justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#8C7A6B]">
+              PREPARANDO EXPERIENCIA
+            </span>
+            <span className="font-serif italic text-sm text-[#C29B88]">
+              Cuidado &amp; Belleza
+            </span>
+          </div>
+
+          {/* NUMERAL DE CARGA XXL */}
+          <div className="flex items-baseline font-mono text-6xl sm:text-7xl font-light tracking-tighter text-[#1A1A1A]">
+            <span>{progress.toString().padStart(2, '0')}</span>
+            <span className="text-2xl text-[#C29B88] font-normal">%</span>
+          </div>
         </div>
 
-        <div className="h-[1px] w-full overflow-hidden bg-neutral-800">
+        {/* BARRA DE PROGRESO INFERIOR CÁLIDA */}
+        <div className="mt-4 h-[2px] w-full bg-[#E8DFD8] overflow-hidden">
           <div
-            className="h-full bg-white transition-all duration-75 ease-out"
-            style={{ width: `${counter}%` }}
+            className="h-full bg-[#C29B88] transition-all duration-150 ease-out"
+            style={{ width: `${progress}%` }}
           />
         </div>
       </div>

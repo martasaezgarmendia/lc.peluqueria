@@ -1,240 +1,197 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
-const NAV_LINKS = [
-  { label: 'Trabajos', href: '#trabajos' },
-  { label: 'Historia & Filosofía', href: '#estudio' },
-  { label: 'Especialidades', href: '#especialidades' },
-  { label: 'Prensa', href: '#artistas' },
-  { label: 'Contacto', href: '#contacto' },
-]
+import { Menu, X, Phone, MessageCircle, ChevronDown, Sparkles } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
 
 export function SiteHeader() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isCitaDropdownOpen, setIsCitaDropdownOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [showContactModal, setShowContactModal] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
-
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-
-    return () => window.removeEventListener('scroll', onScroll)
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleReservationClick = () => {
-    setShowContactModal(true)
-    setOpen(false)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCitaDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    setIsMenuOpen(false)
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
-    <>
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-          scrolled
-            ? 'border-b border-border bg-background/80 backdrop-blur-md'
-            : 'border-b border-transparent'
-        }`}
-      >
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3.5 sm:px-5 sm:py-4 md:px-10">
-          <a
-            href="#top"
-            className="flex items-center gap-3 transition-opacity hover:opacity-90"
-            aria-label="Tattoo Félix — inicio"
-          >
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'border-b border-[#E8DFD8] bg-[#FAF8F5]/95 shadow-sm backdrop-blur-md py-3'
+          : 'border-b border-white/10 bg-[#FAF8F5]/80 backdrop-blur-md py-4'
+      } text-[#1A1A1A]`}
+    >
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-6 md:px-12">
+        
+        {/* LOGO EN IMAGEN WEBP REDONDA */}
+        <a href="#" className="group flex items-center gap-3">
+          <div className="relative h-11 w-11 overflow-hidden rounded-full border border-[#C29B88]/40 shadow-sm transition-transform duration-300 group-hover:scale-105 group-hover:border-[#C29B88]">
             <img
-              src="/logo.jpg"
-              alt="Tattoo Félix Logo"
-              className="h-10 w-10 rounded-full border border-border object-cover"
+              src="logo.webp" 
+              alt="LC Peluquería Logo"
+              className="h-full w-full object-cover"
             />
-
-            <div className="flex flex-col">
-              <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-foreground">
-                Tattoo Félix
-              </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-                Egia — Donostia
-              </span>
-            </div>
-          </a>
-
-          <nav
-            className="hidden items-center gap-8 md:flex"
-            aria-label="Principal"
-          >
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleReservationClick}
-              className="hidden rounded-sm bg-primary px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-primary-foreground transition-opacity hover:opacity-90 md:inline-block"
-            >
-              Pedir Cita
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              aria-expanded={open}
-              aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-              className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
-            >
-              <span
-                className={`h-px w-6 bg-foreground transition-transform ${
-                  open ? 'translate-y-[3.5px] rotate-45' : ''
-                }`}
-              />
-
-              <span
-                className={`h-px w-6 bg-foreground transition-transform ${
-                  open ? '-translate-y-[3.5px] -rotate-45' : ''
-                }`}
-              />
-            </button>
           </div>
-        </div>
+          <div className="flex flex-col">
+            <span className="font-serif text-lg font-semibold tracking-wider text-[#1A1A1A]">
+              LC
+            </span>
+            <span className="font-mono text-[9px] tracking-[0.3em] text-[#C29B88] uppercase">
+              Peluquería
+            </span>
+          </div>
+        </a>
 
-        {open && (
-          <nav
-            className="max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-border bg-background md:hidden"
-            aria-label="Móvil"
-          >
-            <ul className="flex flex-col px-4 py-2 sm:px-5">
-              {NAV_LINKS.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="flex min-h-12 items-center py-3 font-mono text-sm uppercase tracking-widest text-muted-foreground"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-
-              <li>
-                <button
-                  type="button"
-                  onClick={handleReservationClick}
-                  className="mb-3 mt-2 block min-h-12 w-full rounded-sm bg-primary px-5 py-3 text-center font-mono text-sm uppercase tracking-widest text-primary-foreground"
-                >
-                  Pedir Cita
-                </button>
-              </li>
-            </ul>
-          </nav>
-        )}
-      </header>
-
-      {/* Modal con llamada obligatoria para citas + acceso a fotos en Instagram */}
-      {showContactModal && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-background/80 px-4 py-4 backdrop-blur-sm sm:px-5"
-          onClick={() => setShowContactModal(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="contact-modal-title"
-            className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto border border-border bg-background p-6 shadow-2xl sm:p-7 md:p-9"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setShowContactModal(false)}
-              aria-label="Cerrar"
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center text-xl text-muted-foreground transition-colors hover:text-foreground"
+        {/* NAVEGACIÓN DESKTOP */}
+        <nav className="hidden items-center gap-10 font-mono text-xs uppercase tracking-[0.25em] text-[#594E46] md:flex">
+          {[
+            { name: 'Servicios', href: '#servicios' },
+            { name: 'Resultados', href: '#galeria' },
+            { name: 'El Estudio', href: '#nosotros' },
+            { name: 'Ubicación', href: '#contacto' },
+          ].map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              onClick={(e) => scrollToSection(e, item.href)}
+              className="group relative py-1 transition-colors hover:text-[#C29B88]"
             >
-              ×
-            </button>
+              {item.name}
+              <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-[#C29B88] transition-all duration-300 group-hover:w-full" />
+            </a>
+          ))}
+        </nav>
 
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
-              Reserva & Contacto
-            </p>
+        {/* BOTÓN CITA DESPLEGABLE */}
+        <div className="relative hidden md:block" ref={dropdownRef}>
+          <button
+            onClick={() => setIsCitaDropdownOpen(!isCitaDropdownOpen)}
+            className="group inline-flex items-center gap-2 border border-[#C29B88] bg-[#C29B88] px-6 py-2.5 font-mono text-xs uppercase tracking-widest text-white shadow-sm transition-all duration-300 hover:bg-[#1A1A1A] hover:border-[#1A1A1A] hover:shadow-md cursor-pointer"
+          >
+            <Sparkles size={14} className="text-amber-200 transition-transform group-hover:rotate-12" />
+            <span>Pedir Cita</span>
+            <ChevronDown
+              size={14}
+              className={`transition-transform duration-300 ${
+                isCitaDropdownOpen ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
 
-            <h2
-              id="contact-modal-title"
-              className="pr-8 text-2xl font-bold uppercase tracking-tight md:text-3xl"
-            >
-              Pedir Cita
-            </h2>
-
-            <div className="mt-7 flex flex-col gap-3">
-              {/* Opción para agendar cita: Llamada directa */}
+          {isCitaDropdownOpen && (
+            <div className="absolute right-0 mt-3 w-64 border border-[#E8DFD8] bg-[#FAF8F5] p-3 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 z-50">
+              <div className="mb-2 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-[#8C7A6B] border-b border-[#E8DFD8]">
+                Canal de Reserva
+              </div>
               <a
-                href="tel:+34943290236"
-                className="group flex min-h-16 items-center justify-between border border-border bg-card px-5 py-4 transition-colors hover:bg-secondary"
-              >
-                <div className="flex items-center gap-4">
-                  <svg
-                    className="h-5 w-5 shrink-0 fill-current text-accent"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                  </svg>
-
-                  <div>
-                    <p className="font-mono text-xs uppercase tracking-widest text-foreground">
-                      Llamar para Pedir Cita
-                    </p>
-
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      943 29 02 36
-                    </p>
-                  </div>
-                </div>
-
-                <span className="text-muted-foreground transition-transform group-hover:translate-x-1">
-                  →
-                </span>
-              </a>
-
-              {/* Opción secundaría: Ver contenido en Instagram */}
-              <a
-                href="https://www.instagram.com/tattoo_felix/"
+                href="https://wa.me/34943274103?text=Hola,%20me%20gustaría%20pedir%20cita%20en%20LC%20Peluquería"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex min-h-16 items-center justify-between border border-border bg-card px-5 py-4 transition-colors hover:bg-secondary"
+                onClick={() => setIsCitaDropdownOpen(false)}
+                className="flex items-center gap-3 px-3 py-3 font-mono text-xs uppercase tracking-wider text-[#1A1A1A] transition-all hover:bg-[#C29B88]/15 hover:text-[#C29B88] cursor-pointer"
               >
-                <div className="flex items-center gap-4">
-                  <span className="text-xl">📸</span>
-
-                  <div>
-                    <p className="font-mono text-xs uppercase tracking-widest text-foreground">
-                      Ver Contenido y Trabajos
-                    </p>
-
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      @tattoo_felix
-                    </p>
-                  </div>
+                <div className="flex h-8 w-8 items-center justify-center bg-[#25D366]/10 text-[#25D366]">
+                  <MessageCircle size={18} />
                 </div>
-
-                <span className="text-muted-foreground transition-transform group-hover:translate-x-1">
-                  ↗
-                </span>
+                <div className="flex flex-col text-left">
+                  <span className="font-bold">WhatsApp</span>
+                  <span className="text-[10px] text-[#8C7A6B] lowercase">Respuesta rápida</span>
+                </div>
+              </a>
+              <a
+                href="tel:943274103"
+                onClick={() => setIsCitaDropdownOpen(false)}
+                className="flex items-center gap-3 px-3 py-3 font-mono text-xs uppercase tracking-wider text-[#1A1A1A] transition-all hover:bg-[#C29B88]/15 hover:text-[#C29B88] cursor-pointer"
+              >
+                <div className="flex h-8 w-8 items-center justify-center bg-[#C29B88]/10 text-[#C29B88]">
+                  <Phone size={18} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="font-bold">Llamar Ahora</span>
+                  <span className="text-[10px] text-[#8C7A6B]">943 27 41 03</span>
+                </div>
               </a>
             </div>
+          )}
+        </div>
 
-            <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              Calle Ametzagaña 18 — Egia, Donostia
-            </p>
-          </div>
+        {/* BOTÓN MÓVIL */}
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 text-[#1A1A1A] transition-transform active:scale-95 md:hidden"
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
+      </div>
+
+      {/* MENÚ MÓVIL */}
+      {isMenuOpen && (
+        <div className="border-b border-[#E8DFD8] bg-[#FAF8F5] px-6 py-8 shadow-xl animate-in slide-in-from-top-full duration-300 md:hidden">
+          <nav className="flex flex-col gap-5 font-mono text-xs uppercase tracking-[0.2em] text-[#594E46]">
+            {[
+              { name: 'Servicios', href: '#servicios' },
+              { name: 'Resultados', href: '#galeria' },
+              { name: 'El Estudio', href: '#nosotros' },
+              { name: 'Ubicación', href: '#contacto' },
+            ].map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => scrollToSection(e, item.href)}
+                className="border-b border-[#E8DFD8]/50 pb-2 transition-colors hover:text-[#C29B88]"
+              >
+                {item.name}
+              </a>
+            ))}
+
+            <div className="mt-4 flex flex-col gap-3 pt-2">
+              <span className="font-mono text-[10px] text-[#8C7A6B] tracking-widest">
+                RESERVA DIRECTA:
+              </span>
+              <a
+                href="https://wa.me/34943274103?text=Hola,%20me%20gustaría%20pedir%20cita%20en%20LC%20Peluquería"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-[#C29B88] py-3.5 text-center font-mono text-xs text-white shadow-md active:scale-98"
+              >
+                <MessageCircle size={18} />
+                <span>Escribir por WhatsApp</span>
+              </a>
+              <a
+                href="tel:943274103"
+                className="inline-flex items-center justify-center gap-2 border border-[#1A1A1A] bg-transparent py-3.5 text-center font-mono text-xs text-[#1A1A1A] active:scale-98"
+              >
+                <Phone size={18} />
+                <span>Llamar al 943 27 41 03</span>
+              </a>
+            </div>
+          </nav>
         </div>
       )}
-    </>
+    </header>
   )
 }
