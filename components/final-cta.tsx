@@ -13,7 +13,7 @@ export function FinalCta() {
 
       <div className="relative mx-auto max-w-[1600px] px-6 md:px-12">
         <div className="flex flex-col items-center text-center">
-          
+
           <span className="font-mono text-xs uppercase tracking-[0.35em] text-[#C29B88]">
             TU MOMENTO DE CUIDADO
           </span>

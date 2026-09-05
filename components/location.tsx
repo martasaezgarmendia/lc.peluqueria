@@ -29,7 +29,7 @@ export function Location() {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("LC Peluquería San Francisco Kalea 46 Donostia")}`
 
   return (
-    <section id="contacto" className="relative bg-[#FAF8F5] py-20 md:py-32 text-[#1A1A1A]">
+    <section id="ubicacion" className="relative bg-[#FAF8F5] py-20 md:py-32 text-[#1A1A1A]">
       <div className="mx-auto max-w-[1600px] px-6 md:px-12">
         
         {/* CABECERA EDITORIAL */}

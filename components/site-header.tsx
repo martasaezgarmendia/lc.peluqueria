@@ -36,6 +36,15 @@ export function SiteHeader() {
     }
   }
 
+  const navItems = [
+    { name: 'Concepto', href: '#concepto' },
+    { name: 'Servicios', href: '#servicios' },
+    { name: 'Lookbook', href: '#lookbook' },
+    { name: 'El Salón', href: '#equipo' },
+    { name: 'Reseñas', href: '#resenas' },
+    { name: 'Ubicación & Contacto', href: '#ubicacion' },
+  ]
+
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -66,13 +75,8 @@ export function SiteHeader() {
         </a>
 
         {/* NAVEGACIÓN DESKTOP */}
-        <nav className="hidden items-center gap-10 font-mono text-xs uppercase tracking-[0.25em] text-[#594E46] md:flex">
-          {[
-            { name: 'Servicios', href: '#servicios' },
-            { name: 'Resultados', href: '#galeria' },
-            { name: 'El Estudio', href: '#nosotros' },
-            { name: 'Ubicación', href: '#contacto' },
-          ].map((item) => (
+        <nav className="hidden items-center gap-8 font-mono text-xs uppercase tracking-[0.2em] text-[#594E46] lg:flex">
+          {navItems.map((item) => (
             <a
               key={item.name}
               href={item.href}
@@ -152,12 +156,7 @@ export function SiteHeader() {
       {isMenuOpen && (
         <div className="border-b border-[#E8DFD8] bg-[#FAF8F5] px-6 py-8 shadow-xl animate-in slide-in-from-top-full duration-300 md:hidden">
           <nav className="flex flex-col gap-5 font-mono text-xs uppercase tracking-[0.2em] text-[#594E46]">
-            {[
-              { name: 'Servicios', href: '#servicios' },
-              { name: 'Resultados', href: '#galeria' },
-              { name: 'El Estudio', href: '#nosotros' },
-              { name: 'Ubicación', href: '#contacto' },
-            ].map((item) => (
+            {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
