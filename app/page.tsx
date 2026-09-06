@@ -9,6 +9,8 @@ import { FinalCta } from '@/components/final-cta'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import './globals.css'
+import { Team } from '@/components/team'
+import { Lookbook } from '@/components/lookbook'
 
 export default function Page() {
   return (
@@ -19,6 +21,8 @@ export default function Page() {
         <Hero />
         <Concept />
         <Services />
+        <Lookbook />
+        <Team />
         <Resenas />
         <Location />
         <FinalCta />
